@@ -22,13 +22,13 @@ O projeto foi desenvolvido utilizando a arquitetura MTV (Model-Template-View) do
 
 Diagrama de Entidade e Relacionamento (Conceitual)
 
-![Diagrama de Entidade e Relacionamento](<principal/static/images/principal/static/images/Der Conceitual - SGICO.png>)
+![Der Conceitual - SGICO.png](<principal/static/images/principal/static/images/Der Conceitual - SGICO.png>)
 
 A estrutura de dados foi projetada para garantir a rastreabilidade total, desde a compra (Entrada) até o uso (Saída), vinculando Lotes e Validades.
 
 Diagrama de Classes
 
-![Diagrama de Classes](<principal/static/images/principal/static/images/Diagrama de Classe (SGICO).png>)
+![Diagrama de Classe (SGICO).png](<principal/static/images/principal/static/images/Diagrama de Classe (SGICO).png>)
 
 Detalhamento técnico das classes implementadas no Django (models.py), com seus atributos e métodos principais.
 
