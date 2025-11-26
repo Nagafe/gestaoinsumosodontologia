@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Relatórios Gerenciais{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4 text-primary"><i class="fas fa-chart-line mr-2"></i>Relatórios Gerenciais</h2>
+    
+    <div class="row">
+        <!-- Relatório 1: Custo Consumido -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow h-100 hover-card">
+                <div class="card-body text-center">
+                    <div class="display-4 text-danger mb-3"><i class="fas fa-hand-holding-usd"></i></div>
+                    <h4 class="card-title">Custo Consumido</h4>
+                    <p class="card-text text-muted">
+                        Analise o valor monetário dos materiais utilizados em um período. 
+                        Ideal para fechamento de mês.
+                    </p>
+                    <a href="{% url 'relatorio_custo_consumido' %}" class="btn btn-outline-danger btn-block stretched-link">Acessar Relatório</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Relatório 2: Histórico de Compras -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow h-100 hover-card">
+                <div class="card-body text-center">
+                    <div class="display-4 text-success mb-3"><i class="fas fa-history"></i></div>
+                    <h4 class="card-title">Histórico de Compras</h4>
+                    <p class="card-text text-muted">
+                        Visualize todas as compras de um item específico para comparar preços de fornecedores.
+                    </p>
+                    <a href="{% url 'relatorio_historico_compras' %}" class="btn btn-outline-success btn-block stretched-link">Acessar Relatório</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

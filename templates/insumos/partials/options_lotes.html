@@ -1,0 +1,10 @@
+<option value="" selected disabled>Selecione o Lote...</option>
+{% for lote in lotes %}
+    <option value="{{ lote.id }}">
+        Lote: {{ lote.numero_lote }} 
+        | Val: {{ lote.data_validade|date:"d/m/Y" }} 
+        | Disp: {{ lote.quantidade_lote }}
+    </option>
+{% empty %}
+    <option value="" disabled>Sem estoque disponível para este insumo.</option>
+{% endfor %}

@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Funcionário{% endblock %}
+
+{% block content %}
+<div class="card shadow mb-4" style="max-width: 900px; margin: 0 auto;">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-user-edit mr-2"></i>Editar Funcionário: {{ func.nome }}
+        </h6>
+    </div>
+    <div class="card-body">
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            <h6 class="text-secondary mb-3 border-bottom pb-2">Dados Pessoais</h6>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>Nome Completo *</label>
+                    <input type="text" class="form-control" name="nome" value="{{ func.nome }}" required>
+                </div>
+                <div class="form-group col-md-3">
+                    <label>CPF *</label>
+                    <input type="text" class="form-control" name="cpf" value="{{ func.cpf }}" required>
+                </div>
+                <!-- Data precisa ser formatada para YYYY-MM-DD para aparecer no input type="date" -->
+                <div class="form-group col-md-3">
+                    <label>Data Nascimento *</label>
+                    <input type="date" class="form-control" name="data_nascimento" value="{{ func.data_nascimento|date:'Y-m-d' }}" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label>Sexo *</label>
+                    <select class="form-control" name="sexo" required>
+                        <option value="M" {% if func.sexo == 'M' %}selected{% endif %}>Masculino</option>
+                        <option value="F" {% if func.sexo == 'F' %}selected{% endif %}>Feminino</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Telefone *</label>
+                    <input type="text" class="form-control" name="fone" value="{{ func.fone }}" required>
+                </div>
+                <div class="form-group col-md-5">
+                    <label>Local de Nascimento</label>
+                    <input type="text" class="form-control" name="local_nascimento" value="{{ func.local_nascimento }}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Endereço Completo</label>
+                <input type="text" class="form-control" name="endereco" value="{{ func.endereco }}">
+            </div>
+
+            <h6 class="text-secondary mb-3 border-bottom pb-2 mt-4">Dados de Acesso e Sistema</h6>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>Email (Login) *</label>
+                    <input type="email" class="form-control" name="email" value="{{ func.email }}" required>
+                </div>
+                <div class="form-group col-md-6 bg-light p-2 border rounded">
+                    <label class="text-danger">Alterar Senha</label>
+                    <input type="password" class="form-control" name="senha" placeholder="Deixe em branco para manter a senha atual">
+                </div>
+            </div>
+
+            <div class="form-row mt-3">
+                <div class="form-group col-md-6">
+                    <label>Cargo *</label>
+                    <input type="text" class="form-control" name="cargo" value="{{ func.cargo }}" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Permissão de Acesso</label>
+                    <select class="form-control" name="tipo_usuario">
+                        <option value="PADRAO" {% if func.tipo_usuario == 'PADRAO' %}selected{% endif %}>Padrão (Operacional)</option>
+                        <option value="ADMIN" {% if func.tipo_usuario == 'ADMIN' %}selected{% endif %}>Administrador (Acesso Total)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group form-check mt-2 p-3 border rounded">
+                <input type="checkbox" class="form-check-input" id="ativoCheck" name="ativo" {% if func.ativo %}checked{% endif %}>
+                <label class="form-check-label font-weight-bold ml-2" for="ativoCheck">
+                    Cadastro Ativo
+                </label>
+                <small class="d-block text-muted ml-4">Usuários inativos não conseguem fazer login.</small>
+            </div>
+
+            <div class="mt-4 text-right">
+                <a href="{% url 'listar_funcionarios' %}" class="btn btn-secondary">
+                    <i class="fas fa-times mr-1"></i> Cancelar
+                </a>
+                <button type="submit" class="btn btn-success px-4">
+                    <i class="fas fa-save mr-1"></i> Salvar Alterações
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

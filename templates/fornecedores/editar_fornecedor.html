@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Editar Fornecedor{% endblock %}
+
+{% block content %}
+<div class="card shadow mb-4" style="max-width: 800px; margin: 0 auto;">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Editar: {{ fornecedor.nome }}</h6>
+    </div>
+    <div class="card-body">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-md-8">
+                    <label>Nome / Razão Social *</label>
+                    <input type="text" class="form-control" name="nome" value="{{ fornecedor.nome }}" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>CNPJ</label>
+                    <!-- default_if_none:'' evita aparecer 'None' no input -->
+                    <input type="text" class="form-control" name="cnpj" value="{{ fornecedor.cnpj|default_if_none:'' }}">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>Telefone</label>
+                    <input type="text" class="form-control" name="fone" value="{{ fornecedor.fone|default_if_none:'' }}">
+                </div>
+                <div class="form-group col-md-6">
+                    <label>E-mail</label>
+                    <input type="email" class="form-control" name="email" value="{{ fornecedor.email|default_if_none:'' }}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Endereço</label>
+                <input type="text" class="form-control" name="endereco" value="{{ fornecedor.endereco|default_if_none:'' }}">
+            </div>
+            <div class="form-group form-check mt-2">
+                <input type="checkbox" class="form-check-input" id="ativoCheck" name="ativo" {% if fornecedor.ativo %}checked{% endif %}>
+                <label class="form-check-label" for="ativoCheck">Fornecedor Ativo</label>
+            </div>
+            <div class="mt-4 text-right">
+                <a href="{% url 'listar_fornecedores' %}" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-success">Salvar Alterações</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

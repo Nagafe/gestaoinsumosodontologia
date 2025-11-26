@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}SGICO - Gestão de Fornecedores{% endblock %}
+
+{% block content %}
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-truck mr-2"></i>Gestão de Fornecedores
+        </h6>
+        <div class="btn-group">
+        <!-- Insumos-->
+        <a href="{% url 'listar_insumos' %}" class="btn btn-sm btn-info shadow-sm mr-2">
+            <i class="fas fa-boxes fa-sm text-white-50 mr-1"></i> Insumos
+        </a>    
+        <!-- Botão de NOVO CADASTRO -->
+        <a href="{% url 'cadastrar_fornecedor' %}" class="btn btn-sm btn-primary shadow-sm">
+            <i class="fas fa-plus fa-sm text-white-50"></i> Novo Fornecedor
+        </a>
+        </div>
+    </div>
+
+    <div class="card-body">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text bg-light border-0">
+                            <i class="fas fa-search text-muted"></i>
+                        </span>
+                    </div>
+                    <input type="text" 
+                           class="form-control" 
+                           name="q" 
+                           placeholder="Buscar por Nome, CNPJ ou E-mail..."
+                           hx-get="{% url 'buscar_fornecedores' %}" 
+                           hx-trigger="keyup changed delay:500ms"
+                           hx-target="#tabela-fornecedores-container"
+                           hx-indicator="#loading">
+                </div>
+            </div>
+            <div class="col-md-4 d-flex align-items-center">
+                <div id="loading" class="htmx-indicator">
+                    <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                    <small class="text-muted ml-2">Buscando...</small>
+                </div>
+            </div>
+        </div>
+
+        <div id="tabela-fornecedores-container">
+            {% include 'fornecedores/partials/tabela_fornecedores.html' %}
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmarExclusao(url, nome) {
+        Swal.fire({
+            title: 'Tem certeza?',
+            text: `Deseja excluir o fornecedor '${nome}'?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Sim, excluir',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+        })
+    }
+</script>
+{% endblock %}

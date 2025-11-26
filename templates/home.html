@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+
+{% block title %}SGICO - Dashboard Gerencial{% endblock %}
+
+{% block content %}
+<!-- CABEÇALHO E FINANCEIRO -->
+<div class="jumbotron py-4 bg-white shadow-sm border-bottom mb-4">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h1 class="display-5 text-primary">Bem-vindo, {{ funcionario_nome }}!</h1>
+            <p class="lead mb-0 text-muted">Painel de Controle do Sistema de Gestão de Insumos.</p>
+        </div>
+        
+        <!-- CARD VALOR TOTAL (RF011) -->
+        <div class="col-md-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Valor Total em Estoque</div>
+                            <div class="h3 mb-0 font-weight-bold text-gray-800">
+                                R$ {{ total_inventario|floatformat:2 }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    
+    <!-- 1. BOTÕES DE AÇÃO RÁPIDA (OPERACIONAL) -->
+    <h5 class="mb-3 text-dark border-bottom pb-2 font-weight-bold">
+        <i class="fas fa-rocket mr-2"></i>Acesso Rápido
+    </h5>
+
+    <div class="row justify-content-center mb-4">
+        <!-- Entrada -->
+        <div class="col-md-2 mb-2">
+            <a href="{% url 'registrar_entrada' %}" class="text-decoration-none">
+                <div class="card bg-success text-white shadow hover-card py-2">
+                    <div class="card-body text-center">
+                        <i class="fas fa-cart-plus fa-2x mb-2"></i>
+                        <h6 class="font-weight-bold m-0">Entrada</h6>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <!-- Saída -->
+        <div class="col-md-2 mb-2">
+            <a href="{% url 'registrar_saida' %}" class="text-decoration-none">
+                <div class="card bg-danger text-white shadow hover-card py-2">
+                    <div class="card-body text-center">
+                        <i class="fas fa-minus-circle fa-2x mb-2"></i>
+                        <h6 class="font-weight-bold m-0">Saída</h6>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <!-- Insumos -->
+        <div class="col-md-2 mb-2">
+            <a href="{% url 'listar_insumos' %}" class="text-decoration-none">
+                <div class="card bg-warning text-white shadow hover-card py-2">
+                    <div class="card-body text-center">
+                        <i class="fas fa-boxes fa-2x mb-2"></i>
+                        <h6 class="font-weight-bold m-0">Insumos</h6>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <!-- Fornecedores -->
+        <div class="col-md-2 mb-2">
+            <a href="{% url 'listar_fornecedores' %}" class="text-decoration-none">
+                <div class="card bg-info text-white shadow hover-card py-2">
+                    <div class="card-body text-center">
+                        <i class="fas fa-truck fa-2x mb-2"></i>
+                        <h6 class="font-weight-bold m-0">Fornecedores</h6>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Funcionários -->
+        <div class="col-md-2 mb-2">
+            <a href="{% url 'listar_funcionarios' %}" class="text-decoration-none">
+                <div class="card bg-primary text-white shadow hover-card py-2">
+                    <div class="card-body text-center">
+                        <i class="fas fa-users fa-2x mb-2"></i>
+                        <h6 class="font-weight-bold m-0">Funcionários</h6>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <!-- Relatórios -->
+        <div class="col-md-2 mb-2">
+            <a href="{% url 'index_relatorios' %}" class="text-decoration-none">
+                <div class="card bg-secondary text-white shadow hover-card py-2">
+                    <div class="card-body text-center">
+                        <i class="fas fa-chart-bar fa-2x mb-2"></i>
+                        <h6 class="font-weight-bold m-0">Relatórios</h6>
+                    </div>
+                </div>
+    </div>
+
+    <!-- 2. ALERTAS GERENCIAIS (MONITORAMENTO) -->
+    <div class="row">
+        
+        <!-- Tabela: Estoque Baixo (RF008) -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 bg-warning">
+                    <h6 class="m-0 font-weight-bold text-white">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>Reposição Urgente (Mínimo)
+                    </h6>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Produto</th>
+                                    <th class="text-center">Mínimo</th>
+                                    <th class="text-center">Atual</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in insumos_baixo_estoque %}
+                                <tr>
+                                    <td class="align-middle font-weight-bold">{{ item.nome }}</td>
+                                    <td class="text-center align-middle">{{ item.estoque_minimo }}</td>
+                                    <td class="text-center align-middle text-danger font-weight-bold">
+                                        {{ item.saldo_geral }}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted py-4">
+                                        <i class="fas fa-check-circle text-success mr-1"></i> Estoque saudável.
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabela: Vencimentos (RF009) -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 bg-danger">
+                    <h6 class="m-0 font-weight-bold text-white">
+                        <i class="fas fa-calendar-times mr-2"></i>Vencem em 30 Dias
+                    </h6>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Produto (Lote)</th>
+                                    <th class="text-center">Validade</th>
+                                    <th class="text-center">Qtd</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for lote in lotes_vencendo %}
+                                <tr>
+                                    <td class="align-middle">
+                                        <strong>{{ lote.insumo.nome }}</strong><br>
+                                        <small class="text-muted">Lote: {{ lote.numero_lote }}</small>
+                                    </td>
+                                    <td class="text-center align-middle text-danger font-weight-bold">
+                                        {{ lote.data_validade|date:"d/m/Y" }}
+                                    </td>
+                                    <td class="text-center align-middle">{{ lote.quantidade_lote }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted py-4">
+                                        <i class="fas fa-check-circle text-success mr-1"></i> Nenhum lote vencendo.
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .hover-card:hover {
+        transform: translateY(-3px);
+        transition: transform 0.2s;
+        cursor: pointer;
+        opacity: 0.9;
+    }
+</style>
+{% endblock %}

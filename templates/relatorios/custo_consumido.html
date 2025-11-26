@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}Relatório de Custo Consumido{% endblock %}
+
+{% block content %}
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center bg-danger text-white">
+        <h6 class="m-0 font-weight-bold"><i class="fas fa-file-invoice-dollar mr-2"></i>Custo de Materiais Consumidos</h6>
+        <span class="badge badge-light text-danger p-2" style="font-size: 1em;">Total: R$ {{ total_consumido|floatformat:2 }}</span>
+    </div>
+    
+    <div class="card-body">
+
+         <!-- Botão Voltar -->
+        <div class="mb-3">
+            <a href="{% url 'index_relatorios' %}" class="btn btn-light border">
+                <i class="fas fa-arrow-left mr-1"></i> Voltar ao Menu de Relatórios
+            </a>
+        </div>
+        
+        <!-- Filtro de Data -->
+        <form method="GET" class="form-inline mb-4 p-3 bg-light rounded border">
+            <label class="mr-2 font-weight-bold">Período:</label>
+            <input type="date" name="data_inicio" class="form-control mr-2" value="{{ data_inicio }}" required>
+            <span class="mr-2">até</span>
+            <input type="date" name="data_fim" class="form-control mr-3" value="{{ data_fim }}" required>
+            
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-filter mr-1"></i> Filtrar
+            </button>
+            
+            <!-- Botão de Imprimir (Javascript simples) -->
+            <button type="button" onclick="window.print()" class="btn btn-secondary ml-auto">
+                <i class="fas fa-print mr-1"></i> Imprimir
+            </button>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Data</th>
+                        <th>Insumo</th>
+                        <th>Motivo/Destino</th>
+                        <th class="text-center">Qtd</th>
+                        <th class="text-right">Custo Unit.*</th>
+                        <th class="text-right">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mov in movimentacoes %}
+                    <tr>
+                        <td>{{ mov.data_movimentacao|date:"d/m/Y H:i" }}</td>
+                        <td>{{ mov.lote.insumo.nome }}</td>
+                        <td>{{ mov.motivo }}</td>
+                        <td class="text-center">{{ mov.quantidade }}</td>
+                        <td class="text-right text-muted">R$ {{ mov.custo_unitario|floatformat:2 }}</td>
+                        <td class="text-right font-weight-bold">R$ {{ mov.subtotal_calculado|floatformat:2 }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">Nenhuma saída registrada neste período.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr class="bg-light">
+                        <td colspan="5" class="text-right font-weight-bold">TOTAL GERAL:</td>
+                        <td class="text-right font-weight-bold text-danger" style="font-size: 1.1em;">R$ {{ total_consumido|floatformat:2 }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+            <small class="text-muted">* Custo Unitário refere-se ao custo médio ponderado no momento exato da saída.</small>
+        </div>
+    </div>
+</div>
+{% endblock %}

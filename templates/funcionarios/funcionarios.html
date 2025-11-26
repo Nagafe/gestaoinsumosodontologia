@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}SGICO - Gestão de Funcionários{% endblock %}
+
+{% block content %}
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-users mr-2"></i>Gestão de Funcionários
+        </h6>
+        <!-- Botão chama Modal de Cadastro (Reaproveitando lógica ou criando nova view se preferir) -->
+        <!-- Por hora, deixamos sem link ou apontando para uma futura view de cadastro interno -->
+        <a href="{% url 'cadastrar_funcionario' %}" class="btn btn-sm btn-primary shadow-sm">
+    <i class="fas fa-plus fa-sm text-white-50"></i> Novo Funcionário
+</a>
+    </div>
+
+    <div class="card-body">
+        
+        <!-- MENSAGENS -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- BUSCA HTMX -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text bg-light border-0">
+                            <i class="fas fa-search text-muted"></i>
+                        </span>
+                    </div>
+                    <input type="text" 
+                           class="form-control" 
+                           name="q" 
+                           placeholder="Buscar por Nome, CPF ou E-mail..."
+                           hx-get="{% url 'buscar_funcionario' %}" 
+                           hx-trigger="keyup changed delay:500ms"
+                           hx-target="#tabela-funcionarios-container"
+                           hx-indicator="#loading">
+                </div>
+            </div>
+            <!-- Spinner -->
+            <div class="col-md-4 d-flex align-items-center">
+                <div id="loading" class="htmx-indicator">
+                    <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                    <small class="text-muted ml-2">Buscando...</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABELA CONTAINER -->
+        <div id="tabela-funcionarios-container">
+            {% include 'funcionarios/partials/tabela_funcionarios.html' %}
+        </div>
+        
+    </div>
+</div>
+
+<script>
+    function confirmarExclusao(url, nomeFuncionario) {
+        Swal.fire({
+            title: 'Tem certeza?',
+            text: `Você deseja excluir o funcionário '${nomeFuncionario}'? Esta ação não pode ser desfeita!`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+        })
+    }
+</script>
+{% endblock %}

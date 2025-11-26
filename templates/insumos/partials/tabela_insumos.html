@@ -1,0 +1,67 @@
+<div class="table-responsive">
+    <table class="table table-hover table-bordered table-striped">
+        <thead class="thead-light">
+            <tr>
+                <th>Nome</th>
+                <th>Categoria</th>
+                <th>Unidade</th>
+                <th class="text-center">Estoque Mín.</th>
+                <th class="text-center">Saldo Atual</th>
+                <th class="text-center">Status</th>
+                <th class="text-center" style="width: 120px;">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for insumo in insumos %}
+            <tr>
+                <td class="align-middle font-weight-bold">{{ insumo.nome }}</td>
+                <td class="align-middle"><span class="badge badge-light border">{{ insumo.get_categoria_display }}</span></td>
+                <td class="align-middle">{{ insumo.get_unidade_medida_display }}</td>
+                <td class="text-center align-middle">{{ insumo.estoque_minimo }}</td>
+                
+                <!-- Lógica Visual RF008: Alerta de Estoque Baixo -->
+                <td class="text-center align-middle">
+                    {% if insumo.saldo_geral <= insumo.estoque_minimo %}
+                        <span class="text-danger font-weight-bold" title="Abaixo do Mínimo!">
+                            <i class="fas fa-exclamation-circle mr-1"></i>{{ insumo.saldo_geral }}
+                        </span>
+                    {% else %}
+                        <span class="text-success font-weight-bold">{{ insumo.saldo_geral }}</span>
+                    {% endif %}
+                </td>
+
+                <td class="text-center align-middle">
+                    {% if insumo.ativo %}
+                        <span class="badge badge-success">Ativo</span>
+                    {% else %}
+                        <span class="badge badge-secondary">Inativo</span>
+                    {% endif %}
+                </td>
+                <td class="text-center align-middle">
+                    <div class="btn-group" role="group">
+                        <a href="{% url 'editar_insumo' insumo.id %}" class="btn btn-primary btn-sm" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        {% if request.session.tipo_usuario == 'ADMIN' %}
+                        <a href="javascript:void(0);" 
+                           class="btn btn-danger btn-sm" 
+                           data-url="{% url 'excluir_insumo' insumo.id %}" 
+                           data-nome="{{ insumo.nome }}" 
+                           onclick="confirmarExclusao(this.dataset.url, this.dataset.nome)" 
+                           title="Excluir">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center text-muted py-4">
+                    Nenhum insumo encontrado.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

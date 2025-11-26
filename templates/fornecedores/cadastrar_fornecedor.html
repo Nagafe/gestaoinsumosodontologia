@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Novo Fornecedor{% endblock %}
+
+{% block content %}
+<div class="card shadow mb-4" style="max-width: 800px; margin: 0 auto;">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Novo Fornecedor</h6>
+    </div>
+    <div class="card-body">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-md-8">
+                    <label>Nome / Razão Social *</label>
+                    <input type="text" class="form-control" name="nome" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>CNPJ</label>
+                    <input type="text" class="form-control" name="cnpj" placeholder="Apenas números">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>Telefone</label>
+                    <input type="text" class="form-control" name="fone">
+                </div>
+                <div class="form-group col-md-6">
+                    <label>E-mail</label>
+                    <input type="email" class="form-control" name="email">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Endereço</label>
+                <input type="text" class="form-control" name="endereco">
+            </div>
+            <div class="form-group form-check mt-2">
+                <input type="checkbox" class="form-check-input" id="ativoCheck" name="ativo" checked>
+                <label class="form-check-label" for="ativoCheck">Fornecedor Ativo</label>
+            </div>
+            <div class="mt-4 text-right">
+                <a href="{% url 'listar_fornecedores' %}" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-success">Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

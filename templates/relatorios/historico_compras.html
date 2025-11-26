@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %}Histórico de Compras{% endblock %}
+
+{% block content %}
+<div class="card shadow mb-4">
+    <div class="card-header py-3 bg-success text-white">
+        <h6 class="m-0 font-weight-bold"><i class="fas fa-history mr-2"></i>Histórico de Compras por Item</h6>
+    </div>
+    
+    <div class="card-body">
+         <!-- Botão Voltar -->
+        <div class="mb-3">
+            <a href="{% url 'index_relatorios' %}" class="btn btn-light border">
+                <i class="fas fa-arrow-left mr-1"></i> Voltar ao Menu de Relatórios
+            </a>
+        </div>
+
+
+        <!-- Filtro de Insumo -->
+        <form method="GET" class="mb-4 p-3 bg-light rounded border">
+            <div class="form-row align-items-end">
+                <div class="col-md-8">
+                    <label class="font-weight-bold">Selecione o Insumo:</label>
+                    <select name="insumo" class="form-control" onchange="this.form.submit()">
+                        <option value="" selected disabled>-- Escolha um item para ver o histórico --</option>
+                        {% for item in insumos %}
+                            <option value="{{ item.id }}" {% if insumo_selecionado == item.id %}selected{% endif %}>
+                                {{ item.nome }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-success btn-block">
+                        <i class="fas fa-search mr-1"></i> Buscar Histórico
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        {% if insumo_selecionado %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Data da Compra</th>
+                            <th>Fornecedor</th>
+                            <th>Lote / Validade</th>
+                            <th class="text-center">Qtd</th>
+                            <th class="text-right">Custo Unit. Pago</th>
+                            <th class="text-right">Total da Nota</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for compra in compras %}
+                        <tr>
+                            <td>{{ compra.data_movimentacao|date:"d/m/Y" }}</td>
+                            <td>{{ compra.fornecedor.nome|default:"-" }}</td>
+                            <td>
+                                <div>{{ compra.lote.numero_lote }}</div>
+                                <small class="text-muted">Val: {{ compra.lote.data_validade|date:"d/m/Y" }}</small>
+                            </td>
+                            <td class="text-center font-weight-bold">{{ compra.quantidade }}</td>
+                            <td class="text-right text-success font-weight-bold">R$ {{ compra.custo_unitario|floatformat:2 }}</td>
+                            <td class="text-right">R$ {{ compra.total_nota|floatformat:2 }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">Nenhuma compra registrada para este item.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
