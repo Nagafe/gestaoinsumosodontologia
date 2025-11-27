@@ -146,7 +146,7 @@ Documento de Visão
 
 Casos de Uso Descritivos
 
-[Caso de Uso Descritivos](<documentos/Sistema de Gestão de Insumos e Custos Odontológicos.pdf>)
+[Caso de Uso Descritivo](<documentos/Caso de Uso Descritivos(SGICO).pdf>)
 
 Autor: Nagafe de Oliveira Martins
 
